@@ -9,7 +9,7 @@ Create a new project by doing the following:
 
 Basically a bad ripoff of Rust's ```cargo init```
 
-Example usage:
+Example usage:  
 ```$ new python fdsa```
 
 Creates:
@@ -35,5 +35,5 @@ scratch/
 ```
 
 #### Dependencies
-git, pipenv, dep
+git, pipenv, dep  
 Golang projects *must* be created in the GOPATH
