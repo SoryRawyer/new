@@ -13,9 +13,29 @@
 # $1 - language name
 # $2 - project name
 
+LANGUAGE_NAME=$1
+PROJECT_NAME=$2
+
+err() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@" >&2
+}
+
+init_dir() {
+  echo "Creating a ${LANGUAGE_NAME} project named ${PROJECT_NAME}"
+  mkdir ${PROJECT_NAME}
+}
+
+init_git() {
+  cd ${PROJECT_NAME}
+  git init
+  touch .gitignore
+  cd ..
+}
+
 init_golang() {
   # dep init
   # that's... it?
+  cd ${PROJECT_NAME}
   echo "Running 'dep init'"
   dep init
 }
@@ -23,27 +43,28 @@ init_golang() {
 init_python() {
   # pipenv version 3.6
   # that's... it?
+  cd ${PROJECT_NAME}
   echo "Initializing Python virtualenv using pipenv"
   pipenv --python 3.6
 }
 
+#####################################################
+# main : create project dir
+# initialize dir with git and language-specific tools
+#####################################################
 main() {
-  # main:
-  # mkdir project_name && cd project_name
-  # git init
-  language_name=$1
-  project_name=$2
-  echo ${language_name} ${project_name}
-  echo "Creating a ${language_name} project named ${project_name}"
-  mkdir ${project_name} && cd ${project_name}
-  git init
-  touch .gitignore
-  case "${language_name}" in
+  if [[ ${LANGUAGE_NAME} != "python" && ${LANGUAGE_NAME} != "golang" ]]; then
+    err "${LANGUAGE_NAME} projects are not supported"
+    exit 1
+  fi
+  echo "Creating a ${LANGUAGE_NAME} project named ${PROJECT_NAME}"
+  init_dir
+  init_git
+  case "${LANGUAGE_NAME}" in
     golang) init_golang ;;
     python) init_python ;;
-    *) echo "${language_name} projects are not supported" ;;
   esac
   echo "Done"
 }
 
-main $1 $2
+main
