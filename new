@@ -5,16 +5,24 @@
 #   - intialize a git repo
 #   - create a .gitignore
 #   - create language-specific things:
+#       - elixir:
+#           - mix new
 #       - golang:
 #           - dep init
 #       - python:
 #           - pipenv version 3.6
+#       - rust:
+#           - cargo init
 
 # $1 - language name
 # $2 - project name
+# $3 — extra options for projects
 
 LANGUAGE_NAME=$1
 PROJECT_NAME=$2
+EXTRA_OPS=$3
+
+LANGUAGES=("python", "golang", "elixir", "rust")
 
 err() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@" >&2
@@ -30,6 +38,11 @@ init_git() {
   git init
   touch .gitignore
   cd ..
+}
+
+init_elixir() {
+  mix new ${PROJECT_NAME} ${EXTRA_OPS}
+  init_git
 }
 
 init_golang() {
@@ -48,21 +61,38 @@ init_python() {
   pipenv --python 3.6
 }
 
+init_rust() {
+  # just run cargo init!
+  cargo new ${PROJECT_NAME} --vcs git
+}
+
 #####################################################
 # main : create project dir
 # initialize dir with git and language-specific tools
 #####################################################
 main() {
-  if [[ ${LANGUAGE_NAME} != "python" && ${LANGUAGE_NAME} != "golang" ]]; then
+  if [[ ${LANGUAGES[*]} =~ "${LANGUAGE_NAME}"} ]]; then
     err "${LANGUAGE_NAME} projects are not supported"
     exit 1
   fi
-  echo "Creating a ${LANGUAGE_NAME} project named ${PROJECT_NAME}"
-  init_dir
-  init_git
+  echo "Creating a ${LANGUAGE_NAME} project named ${PROJECT_NAME} with options ${EXTRA_OPS}"
   case "${LANGUAGE_NAME}" in
-    golang) init_golang ;;
-    python) init_python ;;
+    elixir)
+      init_elixir
+      ;;
+    golang)
+      init_dir
+      init_git
+      init_golang
+      ;;
+    python)
+      init_dir
+      init_git
+      init_python
+      ;;
+    rust)
+      init_rust
+      ;;
   esac
   echo "Done"
 }
