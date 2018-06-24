@@ -7,6 +7,13 @@ Create a new project by doing the following:
   - golang: [dep](https://github.com/golang/dep)
   - python: [pipenv](https://github.com/pypa/pipenv)
 
+Supports:
+- elixir
+- golang
+- python
+- rust
+- scala (via the ```scala/scala-seed.g8``` [Giter8 template](https://github.com/scala/scala-seed.g8))
+
 Basically a bad ripoff of Rust's ```cargo init```
 
 Example usage:  
@@ -35,5 +42,5 @@ scratch/
 ```
 
 #### Dependencies
-git, pipenv, dep  
+git, [pipenv](https://github.com/pypa/pipenv), [dep](https://github.com/golang/dep), [sbt](https://www.scala-sbt.org/), [mix](https://elixir-lang.org/)  
 Golang projects *must* be created in the GOPATH
